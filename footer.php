@@ -1,5 +1,5 @@
-      </div><!--/main>
-    </div><!--/current-->
+        </div><!--/main>
+      </div><!--/current-->
     </div><!--/page-->
   </body>
   </html>

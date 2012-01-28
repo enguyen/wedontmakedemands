@@ -1,0 +1,246 @@
+/*
+ * Copyright 2011 Eric Nguyen
+ * See http://wedontmakedemands.org/ for more details
+ */
+
+h1 {
+  font-size: 60px;
+  font-weight: bold;
+  margin: 0px;
+}
+
+a {
+  color: #f00;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.selected {
+  color: #f00;
+  font-weight: bold;
+}
+
+#poster {
+	font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+  color: #000;
+  background: #fff;
+  text-transform: uppercase;
+  position: absolute;
+  left: 36px;
+  top: 145px;
+  width: 380px;
+  height: 587px;
+  background: #fff;
+  -webkit-box-shadow: 5px 5px 25px #999;
+  -moz-box-shadow: 5px 5px 25px #999;
+  -ms-box-shadow: 5px 5px 25px #999;
+  -o-box-shadow: 5px 5px 25px #999;
+  box-shadow: 5px 5px 25px #999;
+}
+
+#poster:hover {
+  /* background: url(sampleposter-transparent.png) top left no-repeat; */
+  background-size: 380px 587px; 
+}
+
+.header {
+  text-align: right;
+  margin-right: 5px;
+  margin-top: 1px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+}
+
+.fixedtext {
+  line-height: 16px;
+  font-size: 16px;
+}
+
+.fixedtext span {
+  font-size: 145%;
+  color: #d8162e;
+}
+
+.red {
+  color: #d8162e;
+}
+
+.fixedtext span.down {
+  position: relative;
+  top: 4px;
+}
+
+.message {
+  position: absolute;
+  width: 370px;
+  height: 320px;
+  top: 149px;
+  left: 6px;
+  font-size: 70px;
+  line-height: 54px;
+  overflow: hidden;
+}
+
+.message span {
+  color: #d8162e;
+}
+
+.qrcode {
+  position: absolute;
+  right: 3px;
+  bottom: 4px;
+  width: 104px;
+  height: 104px;
+}
+
+.linklabel1, .linklabel2 {
+  position: absolute;
+  right: 58px;
+  bottom: 51px;
+  width: 110px;
+  font-size: 15px;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  transform: rotate(-90deg);
+}
+
+.linklabel1 {
+  color: #d8162e;
+  right: 72px;
+  bottom: 49px;
+  font-size: 16px;
+}
+
+#editor {
+  position: absolute;
+  left: 436px;
+  top: 145px;
+  width: 380px;
+  height: 587px;
+  text-transform: none;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+#editor h1 {
+  font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+  color: #ddd;
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+#editor ol {
+  list-style-type: none;
+  padding: 0 0 0 80px;
+  margin: 0px;
+}
+
+#editor li {
+  margin: 0px 0 45px 0;
+}
+
+#editor li .number {
+  float: left;
+  width: 60px;
+  text-align: right;
+  margin-left: -80px;
+  margin-top: -10px;
+  font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+  color: #ddd;
+  font-size: 50px;
+}
+
+#editor button {
+  width: 80px;
+  height: 30px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  background-color: #eee;
+  background-image: -webkit-linear-gradient(top,#eee,#ddd);
+  background-image: -moz-linear-gradient(top,#eee,#ddd);
+  background-image: -ms-linear-gradient(top,#eee,#ddd);
+  background-image: -o-linear-gradient(top,#eee,#ddd);
+  background-image: linear-gradient(top,#eee,#ddd);
+  border: 1px solid #bbb;
+  font-size: 16px;
+  margin: 0px;
+}
+
+#editor button:hover {
+  text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+  border: 1px solid #999;
+  background-color: #ddd;
+  background-image: -webkit-linear-gradient(top,#eee,#ccc);
+  background-image: -moz-linear-gradient(top,#eee,#ccc);
+  background-image: -ms-linear-gradient(top,#eee,#ccc);
+  background-image: -o-linear-gradient(top,#eee,#ccc);
+  background-image: linear-gradient(top,#eee,#ccc);
+}
+
+#editor button:active {
+  color: #fff;
+  text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+  border: 1px solid #999;
+  background-color: #999;
+  background-image: -webkit-linear-gradient(top,#ddd,#bbb);
+  background-image: -moz-linear-gradient(top,#ddd,#bbb);
+  background-image: -ms-linear-gradient(top,#ddd,#bbb);
+  background-image: -o-linear-gradient(top,#ddd,#bbb);
+  background-image: linear-gradient(top,#ddd,#bbb);
+}
+#editor input,
+#editor textarea {
+  font-size: 16px;
+  border: none;
+  padding: 5px 9px;
+  margin: 5px 0;
+  width: 100%;
+  height: 30px;
+  -webkit-box-shadow: 2px 2px 10px #ccc inset;
+  -moz-box-shadow: 2px 2px 10px #ccc inset;
+  -ms-box-shadow: 2px 2px 10px #ccc inset;
+  -o-box-shadow: 2px 2px 10px #ccc inset;
+  box-shadow: 2px 2px 10px #ccc inset;
+  overflow: auto;
+  background: #eee;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+#editor textarea {
+  padding: 6px 10px;
+  height: 60px;
+}
+
+#editor .link-input {
+  margin-bottom: 0px;
+}
+
+#editor .short-link-input {
+  width: 215px;
+  height: 30px;
+  padding: 5px;
+  margin: 0px;
+}
+
+#editor .info {
+  font-size: 11px;
+  color: #999;
+}
+
+#editor .link-preview {
+  width: 298px;
+  height: 120px;
+  border: 1px solid #ccc;
+}

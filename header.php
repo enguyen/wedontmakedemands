@@ -9,7 +9,7 @@
     <meta name="description" content="We Don't Make Demands: Suggestions for real reforms to US and international banking, political, and environmental practices."> 
     <meta name="description" content="occupy,occupy wall street,demands,suggestions,posters"> 
     <link rel="stylesheet" type="text/css" href="main.css">
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$('#nav li.donate').click(function() {
@@ -54,6 +54,7 @@ Donate
 </form>
 </li>
         <li><a href="mailto:media@wedontmakedemands.org" title="media@wedontmakedemands.org">Contact Us</a></li>
+        <li><a href="create.php">Create</a></li>
       </ul>
     </div><!-- end header -->
     <div id="current">

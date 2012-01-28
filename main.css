@@ -94,6 +94,7 @@ ul#nav li.donate form {
 #page {
 	width: 900px;
 	margin: 0 auto;
+	position: relative;
 }
 #current {
 	width: 900px;
