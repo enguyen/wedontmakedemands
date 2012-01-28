@@ -1,0 +1,477 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+    <script type="text/javascript">
+      /*
+       * Copyright 2011 Eric Nguyen
+       * See http://wedontmakedemands.org/ for more details
+       */
+      
+      // Globals. Whatever, don't judge me.
+      var messageInput, messageOutput,
+          linkInput, linkPreview, qrcode, qrcodeLink,
+          shareButton, shortLinkInput;
+       
+      // Protect against XSS attacks by whitelisting any user-provided
+      // data before it is added anywhere to the DOM.
+      function sanitize(string) {
+        var out = '';
+        // TODO: Quadruple-check. Two output contexts, both assigned 
+        //     via DOM properties: innerHTML and as tag attributes 
+        //     (href and title, for the qrcode link).
+        var whitelist = /[\w\d\s\/,.?\/~\-_=+:;'"!@#$%^&*()]/;
+        for (var i = 0; i < string.length; i += 1) {
+          var char = string[i];
+          if (whitelist.test(char)) {
+            out += char;
+          } else {
+            console.log('Invalid char: ' + char);
+          }
+        }
+        return out;
+      } 
+
+      // Sanitize, highlight, and output message.
+      function updateMessage() {
+        var message = sanitize(messageInput.val());
+        message = message.replace('\n', ' <br/> ');
+        var tokens = message.split(/\s/);
+        tokens = $.map(tokens, function(token) {
+          return token == token.toUpperCase() ?
+              '<span>' + token + '</span>' : token;
+        });
+        messageOutput[0].innerHTML = tokens.join(' ');
+        updateUrl();
+      }
+      
+      function updateFontScale(percentChange) {
+        function scaleStyle(originalProperty) {
+          var oldScale = messageOutput.data('fontScale');
+          var newScale = oldScale + (percentChange / 100);
+          messageOutput.data('fontScale', newScale);
+          var originalValue = messageOutput.data(originalProperty);
+          return (originalValue * newScale) + 'px';
+        }
+        messageOutput.css('font-size', scaleStyle('originalFontSize'));
+        messageOutput.css('line-height', scaleStyle('originalLineHeight'));
+        updateUrl();
+      }
+      
+      // Sanitize and output Wikipedia link. Throttle this to 
+      // keep it from hitting the Charts API too often.
+      function updateLink() {        
+        var linkValue = sanitize(linkInput.val());
+        qrcode[0].src = 'https://chart.googleapis.com/chart?' +
+            'cht=qr&chs=120x120&choe=UTF-8&chld=M|0&chl=' +
+            'http://en.qrwp.org/' + linkValue;
+        qrcodeLink[0].href = 'http://en.qrwp.org/' + linkValue;
+        qrcodeLink[0].title = 'Wikipedia article: "' + linkValue + '"'
+        linkPreview[0].src = qrcodeLink[0].href;
+        updateUrl();
+      }
+      
+      function makeThrottled(inputFunction, delay) {
+        var timedExecution;
+        function throttled() {
+          clearTimeout(timedExecution);
+          timedExecution = setTimeout(inputFunction, delay);
+        }
+        return throttled;
+      }
+      
+      function updateUrl() {
+        var params = {
+          m: messageInput.val(),
+          l: linkInput.val(),
+          s: Math.round(100 * messageOutput.data('fontScale')) / 100
+        };
+        var hashString = '';
+        for (var paramName in params) {
+          var value = params[paramName];
+          if (value) hashString += (paramName + '=' + encodeURI(value) + '&');
+        }
+        window.location.hash = hashString;
+      }
+      
+      function main() {
+        // Set globals.
+        messageInput = $('#editor .message-input');
+        messageOutput = $('#poster .message');
+        linkInput = $('#editor .link-input');
+        linkPreview = $('#editor .link-preview');
+        qrcode = $('#poster .qrcode');
+        qrcodeLink = $('#poster .qrcode-link');
+        shareButton = $('#editor .share-button');
+        shortLinkInput = $('#editor .short-link-input');
+        
+        // Extract initial settings from URL. Sanitize.
+        var paramStrings = window.location.hash.slice(1).split('&');
+        var params = {};
+        for (var i = 0; i < paramStrings.length; i += 1) {
+          var hash = paramStrings[i].split('=');
+          params[hash[0]] = sanitize(decodeURI(hash[1]));
+        }
+        
+        // Push initial settings into editor.
+        messageInput.val(params.m);
+        linkInput.val(params.l);
+        
+        // Set up events and initialize poster.
+        // Message.
+        messageInput.keyup(makeThrottled(updateMessage, 250));
+        updateMessage();
+        
+        // Link.
+        linkInput.keyup(makeThrottled(updateLink, 2000));
+        params.l && updateLink();
+        
+        // Font size and line height.
+        messageOutput.data('fontScale', parseFloat(params.s) || 1);
+        messageOutput.data('originalFontSize', 
+            parseInt(messageOutput.css('font-size').slice(0,-2)));
+        messageOutput.data('originalLineHeight', 
+            parseInt(messageOutput.css('line-height').slice(0,-2)));
+        $('#editor .larger-button').click(function() {
+          updateFontScale(1)
+        });
+        $('#editor .smaller-button').click(function() {
+          updateFontScale(-1)
+        });
+        params.s && updateFontScale(params.s - 1);
+        
+        // Set up share button.
+        shareButton.click(function() {
+          gapi.client.load('urlshortener', 'v1', function() {
+            var request = gapi.client.urlshortener.url.insert({
+              resource: { 
+                key: 'AIzaSyDQ8kbLY0NXOFDlqE80D_8W4zN1JTnF2Z0',
+                longUrl: window.location.href
+              }
+            });
+            var resp = request.execute(function(resp) {
+              if (!resp.error) {
+                shortLinkInput.show();
+                shortLinkInput.val(resp.id);
+                shortLinkInput.select();
+                $('.addthis_toolbox').show();
+              }
+            });
+          });
+        });
+      }
+    </script>
+    <link rel="stylesheet" href="proximanovawebfont/stylesheet.css" type="text/css" charset="utf-8" />
+    <style type="text/css" media="screen">
+      body {
+        padding: 10px;
+        font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+        color: #000;
+        background: #fff;
+        text-transform: uppercase;
+        xbackground: url('http://960.gs/img/12_col.gif');
+      }
+
+      h1 {
+        font-size: 60px;
+        font-weight: bold;
+        margin: 0px;
+      }
+
+      a {
+        color: #f00;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a.selected {
+        color: #f00;
+        font-weight: bold;
+      }
+
+      #poster {
+        position: absolute;
+        left: 90px;
+        top: 60px;
+        width: 380px;
+        height: 587px;
+        background: #fff;
+        -webkit-box-shadow: 5px 5px 25px #999;
+        -moz-box-shadow: 5px 5px 25px #999;
+        -ms-box-shadow: 5px 5px 25px #999;
+        -o-box-shadow: 5px 5px 25px #999;
+        box-shadow: 5px 5px 25px #999;
+      }
+      
+      #poster:hover {
+        /* background: url(sampleposter-transparent.png) top left no-repeat; */
+        background-size: 380px 587px; 
+      }
+      
+      .header {
+        text-align: right;
+        margin-right: 5px;
+        margin-top: 1px;
+      }
+      
+      .footer {
+        position: absolute;
+        bottom: 3px;
+        left: 5px;
+      }
+      
+      .fixedtext {
+        line-height: 16px;
+        font-size: 16px;
+      }
+      
+      .fixedtext span {
+        font-size: 145%;
+        color: #d8162e;
+      }
+      
+      .red {
+        color: #d8162e;
+      }
+      
+      .fixedtext span.down {
+        position: relative;
+        top: 4px;
+      }
+      
+      .message {
+        position: absolute;
+        width: 370px;
+        height: 320px;
+        top: 149px;
+        left: 6px;
+        font-size: 70px;
+        line-height: 54px;
+        overflow: hidden;
+      }
+      
+      .message span {
+        color: #d8162e;
+      }
+      
+      .qrcode {
+        position: absolute;
+        right: 3px;
+        bottom: 4px;
+        width: 104px;
+        height: 104px;
+      }
+      
+      .linklabel1, .linklabel2 {
+        position: absolute;
+        right: 58px;
+        bottom: 51px;
+        width: 110px;
+        font-size: 15px;
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+        transform: rotate(-90deg);
+      }
+      
+      .linklabel1 {
+        color: #d8162e;
+        right: 72px;
+        bottom: 49px;
+        font-size: 16px;
+      }
+      
+      #editor {
+        position: absolute;
+        left: 490px;
+        top: 60px;
+        width: 380px;
+        height: 587px;
+        text-transform: none;
+        font-family: 'Helvetica', 'Arial', sans-serif;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+
+      #editor h1 {
+        font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+        color: #ddd;
+        font-size: 50px;
+        margin-bottom: 10px;
+      }
+      
+      #editor ol {
+        list-style-type: none;
+        padding: 0 0 0 80px;
+        margin: 0px;
+      }
+      
+      #editor li {
+        margin: 0px 0 45px 0;
+      }
+      
+      #editor li .number {
+        float: left;
+        width: 60px;
+        text-align: right;
+        margin-left: -80px;
+        margin-top: -10px;
+        font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+        color: #ddd;
+        font-size: 50px;
+      }
+      
+      #editor button {
+        width: 80px;
+        height: 30px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        background-color: #eee;
+        background-image: -webkit-linear-gradient(top,#eee,#ddd);
+        background-image: -moz-linear-gradient(top,#eee,#ddd);
+        background-image: -ms-linear-gradient(top,#eee,#ddd);
+        background-image: -o-linear-gradient(top,#eee,#ddd);
+        background-image: linear-gradient(top,#eee,#ddd);
+        border: 1px solid #bbb;
+        font-size: 16px;
+        margin: 0px;
+      }
+      
+      #editor button:hover {
+        text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+        border: 1px solid #999;
+        background-color: #ddd;
+        background-image: -webkit-linear-gradient(top,#eee,#ccc);
+        background-image: -moz-linear-gradient(top,#eee,#ccc);
+        background-image: -ms-linear-gradient(top,#eee,#ccc);
+        background-image: -o-linear-gradient(top,#eee,#ccc);
+        background-image: linear-gradient(top,#eee,#ccc);
+      }
+
+      #editor button:active {
+        color: #fff;
+        text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+        border: 1px solid #999;
+        background-color: #999;
+        background-image: -webkit-linear-gradient(top,#ddd,#bbb);
+        background-image: -moz-linear-gradient(top,#ddd,#bbb);
+        background-image: -ms-linear-gradient(top,#ddd,#bbb);
+        background-image: -o-linear-gradient(top,#ddd,#bbb);
+        background-image: linear-gradient(top,#ddd,#bbb);
+      }
+      #editor input,
+      #editor textarea {
+        font-size: 16px;
+        border: none;
+        padding: 5px 9px;
+        margin: 5px 0;
+        width: 100%;
+        height: 30px;
+        -webkit-box-shadow: 2px 2px 10px #ccc inset;
+        -moz-box-shadow: 2px 2px 10px #ccc inset;
+        -ms-box-shadow: 2px 2px 10px #ccc inset;
+        -o-box-shadow: 2px 2px 10px #ccc inset;
+        box-shadow: 2px 2px 10px #ccc inset;
+        overflow: auto;
+        background: #eee;
+        font-family: 'Helvetica', 'Arial', sans-serif;
+      }
+
+      #editor textarea {
+        padding: 6px 10px;
+        height: 60px;
+      }
+      
+      #editor .link-input {
+        margin-bottom: 0px;
+      }
+      
+      #editor .short-link-input {
+        width: 215px;
+        height: 30px;
+        padding: 5px;
+        margin: 0px;
+      }
+      
+      #editor .info {
+        font-size: 11px;
+        color: #999;
+      }
+      
+      #editor .link-preview {
+        width: 298px;
+        height: 120px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body onload="main()">
+    <div id="poster">
+      <div class="fixedtext header">
+        We don't make <span class="down"> demands</span><br/>
+        so <span> this </span> is a suggestion
+      </div>
+      <div class="message"></div>
+      <div class="fixedtext footer">
+        <span>Solutions.</span><br/>
+        They're out there
+      </div>
+      <div class="linklabel1">Learn more</div>
+      <div class="linklabel2">at Wikipedia</div>
+      <a class="qrcode-link"><img class="qrcode" /></a>
+    </div>
+
+    <div id="editor">
+      <h1>Make your own</h1>
+      
+      <ol>
+        <li>
+          <div class="number">1.</div>
+          Craft your message:
+          <textarea class="message-input"></textarea>
+          <div class="info" style="margin-bottom: 10px;">
+            (<span class="red">UPPERCASE words are red</span>, lowercase words are black.)
+          </div>
+          <button class="larger-button">Larger</button> or 
+          <button class="smaller-button">Smaller</button> text.
+        </li>
+      
+        <li>
+          <div class="number">2.</div>
+          Link to a Wikipedia article:
+          <input class="link-input" type="text" />
+          <iframe class="link-preview"></iframe>
+        </li>
+      
+        <li>
+          <div class="number">3.</div>
+          <button class="share-button">Share it</button>
+          <input class="short-link-input" type="text" style="display:none;" />
+          <div class="addthis_toolbox addthis_default_style addthis_32x32_style" 
+               style="display:none; margin: 10px 0 0 82px;">
+            <a class="addthis_button_preferred_1"></a>
+            <a class="addthis_button_preferred_2"></a>
+            <a class="addthis_button_preferred_3"></a>
+            <a class="addthis_button_preferred_4"></a>
+            <a class="addthis_button_compact"></a>
+          </div>
+          <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f04a87632cb44b5"></script>
+        </li>
+      </ol>
+    </div>
+
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      _uacct = "UA-587715-2";
+      urchinTracker();
+    </script>
+
+  </body>
+</html>
