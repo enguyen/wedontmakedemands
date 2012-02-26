@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Eric Nguyen
- * See http://wedontmakedemands.org/ for more details
+ * See http://wedontmakedemands.org/ for more details.
  */
 
 h1 {
@@ -121,7 +121,7 @@ a.selected {
   font-size: 16px;
 }
 
-#editor {
+.rightpane {
   position: absolute;
   left: 436px;
   top: 145px;
@@ -133,24 +133,24 @@ a.selected {
   margin-right: 10px;
 }
 
-#editor h1 {
+.rightpane h1 {
   font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
   color: #ddd;
   font-size: 50px;
   margin-bottom: 10px;
 }
 
-#editor ol {
+.rightpane ol {
   list-style-type: none;
   padding: 0 0 0 80px;
   margin: 0px;
 }
 
-#editor li {
+.rightpane li {
   margin: 0px 0 45px 0;
 }
 
-#editor li .number {
+.rightpane li .number {
   float: left;
   width: 60px;
   text-align: right;
@@ -161,8 +161,8 @@ a.selected {
   font-size: 50px;
 }
 
-#editor button {
-  width: 80px;
+.rightpane button {
+  xwidth: 80px;
   height: 30px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -178,7 +178,7 @@ a.selected {
   margin: 0px;
 }
 
-#editor button:hover {
+.rightpane button:hover {
   text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
   border: 1px solid #999;
   background-color: #ddd;
@@ -189,7 +189,7 @@ a.selected {
   background-image: linear-gradient(top,#eee,#ccc);
 }
 
-#editor button:active {
+.rightpane button:active {
   color: #fff;
   text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
   border: 1px solid #999;
@@ -200,8 +200,8 @@ a.selected {
   background-image: -o-linear-gradient(top,#ddd,#bbb);
   background-image: linear-gradient(top,#ddd,#bbb);
 }
-#editor input,
-#editor textarea {
+.rightpane input,
+.rightpane textarea {
   font-size: 16px;
   border: none;
   padding: 5px 9px;
@@ -218,29 +218,39 @@ a.selected {
   font-family: 'Helvetica', 'Arial', sans-serif;
 }
 
-#editor textarea {
+.rightpane textarea {
   padding: 6px 10px;
   height: 60px;
 }
 
-#editor .link-input {
+#edit .link-input {
   margin-bottom: 0px;
 }
 
-#editor .short-link-input {
-  width: 215px;
-  height: 30px;
+#share .short-link {
+  width: 160px;
+  height: 22px;
   padding: 5px;
   margin: 0px;
+	float: left;
 }
 
-#editor .info {
+#share .addthis_toolbox {
+	height: 32px;
+	margin: 0 0 10px 180px;
+}
+
+#edit .info {
   font-size: 11px;
   color: #999;
 }
 
-#editor .link-preview {
+#edit .link-preview {
   width: 298px;
   height: 120px;
   border: 1px solid #ccc;
+}
+
+#edit .share-button {
+	margin-top: 4px;
 }

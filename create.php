@@ -9,9 +9,8 @@
 <link rel="stylesheet" type="text/css" href="create/create.css" />
 <script type="text/javascript">
   // Initialize.
-  $(document).ready(function() {
-    create_main();
-  });
+  $(document).ready(onready);
+  $(window).load(onload);
 </script>
 
 <div id="poster">
@@ -29,9 +28,22 @@
   <a class="qrcode-link"><img class="qrcode" /></a>
 </div>
 
-<div id="editor">
+<div id="share" class="rightpane">
+  <h1>Share it</h1>
+  <input class="short-link" type="text" />
+  <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+    <a class="addthis_button_preferred_1" addthis:url="foo"></a>
+    <a class="addthis_button_preferred_2"></a>
+    <a class="addthis_button_preferred_3"></a>
+    <a class="addthis_button_preferred_4"></a>
+    <a class="addthis_button_compact"></a>
+  </div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f04a87632cb44b5"></script>
+  <button class="remix-button">Remix this poster</button>  
+</div>
+
+<div id="edit" class="rightpane" style="display:none;">
   <h1>Make your own</h1>
-  
   <ol>
     <li>
       <div class="number">1.</div>
@@ -54,16 +66,6 @@
     <li>
       <div class="number">3.</div>
       <button class="share-button">Share it</button>
-      <input class="short-link-input" type="text" style="display:none;" />
-      <div class="addthis_toolbox addthis_default_style addthis_32x32_style" 
-           style="display:none; margin: 10px 0 0 82px;">
-        <a class="addthis_button_preferred_1"></a>
-        <a class="addthis_button_preferred_2"></a>
-        <a class="addthis_button_preferred_3"></a>
-        <a class="addthis_button_preferred_4"></a>
-        <a class="addthis_button_compact"></a>
-      </div>
-      <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f04a87632cb44b5"></script>
     </li>
   </ol>
 </div>

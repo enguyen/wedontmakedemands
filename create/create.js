@@ -1,16 +1,19 @@
 /*
  * Copyright 2011 Eric Nguyen
- * See http://wedontmakedemands.org/ for more details
+ * See http://wedontmakedemands.org/ for more details.
  */
 
 // Globals. Whatever, don't judge me.
-var messageInput, messageOutput,
+var editPane, messageInput, messageOutput,
     linkInput, linkPreview, qrcode, qrcodeLink,
-    shareButton, shortLinkInput;
+    shareButton, shortLink, sharePane;
  
 // Protect against XSS attacks by whitelisting any user-provided
 // data before it is added anywhere to the DOM.
 function sanitize(string) {
+  if (!string) {
+    return ''; // In case it's undefined or otherwise falsy.
+  }
   var out = '';
   // TODO: Quadruple-check. Two output contexts, both assigned 
   //     via DOM properties: innerHTML and as tag attributes 
@@ -89,16 +92,47 @@ function updateUrl() {
   window.location.hash = hashString;
 }
 
-function create_main() {
+// Takes a callback function, with the shortened URL as its param.
+function getShortLink(callback) { 
+  gapi.client.load('urlshortener', 'v1', function() {
+    var request = gapi.client.urlshortener.url.insert({
+      resource: { 
+        key: 'AIzaSyDQ8kbLY0NXOFDlqE80D_8W4zN1JTnF2Z0',
+        longUrl: window.location.href
+      }
+    });
+    var resp = request.execute(function(resp) {
+      if (!resp.error) {
+        callback(resp.id);
+      }
+    });
+  });
+}
+
+// Separated out so that we can call this on load() (after the
+// Google API bootstrapper has loaded) rather than ready()
+function onload() {
+	getShortLink(function(url) {
+		console.log(url);
+    shortLink.val(url);
+  });
+}
+
+// Main setup tasks to be executed immediately after the DOM is
+// ready.
+function onready() {
   // Set globals.
-  messageInput = $('#editor .message-input');
+  editPane = $('#edit');
+  messageInput = $('#edit .message-input');
   messageOutput = $('#poster .message');
-  linkInput = $('#editor .link-input');
-  linkPreview = $('#editor .link-preview');
+  linkInput = $('#edit .link-input');
+  linkPreview = $('#edit .link-preview');
   qrcode = $('#poster .qrcode');
   qrcodeLink = $('#poster .qrcode-link');
-  shareButton = $('#editor .share-button');
-  shortLinkInput = $('#editor .short-link-input');
+  shareButton = $('#edit .share-button');
+  sharePane = $('#share');
+  shortLink = $('#share .short-link');
+  remixButton = $('#share .remix-button');
   
   // Extract initial settings from URL. Sanitize.
   var paramStrings = window.location.hash.slice(1).split('&');
@@ -107,7 +141,11 @@ function create_main() {
     var hash = paramStrings[i].split('=');
     params[hash[0]] = sanitize(decodeURI(hash[1]));
   }
-  
+
+  // We start in view/share mode.
+  sharePane.show();
+  editPane.hide();
+
   // Push initial settings into editor.
   messageInput.val(params.m);
   linkInput.val(params.l);
@@ -130,28 +168,23 @@ function create_main() {
   $('#editor .larger-button').click(function() {
     updateFontScale(1)
   });
-  $('#editor .smaller-button').click(function() {
+  $('#edit .smaller-button').click(function() {
     updateFontScale(-1)
   });
   params.s && updateFontScale(params.s - 1);
+
+  // Set up remix button.
+  remixButton.click(function() {
+    sharePane.hide();
+    editPane.show();
+  });
   
   // Set up share button.
   shareButton.click(function() {
-    gapi.client.load('urlshortener', 'v1', function() {
-      var request = gapi.client.urlshortener.url.insert({
-        resource: { 
-          key: 'AIzaSyDQ8kbLY0NXOFDlqE80D_8W4zN1JTnF2Z0',
-          longUrl: window.location.href
-        }
-      });
-      var resp = request.execute(function(resp) {
-        if (!resp.error) {
-          shortLinkInput.show();
-          shortLinkInput.val(resp.id);
-          shortLinkInput.select();
-          $('.addthis_toolbox').show();
-        }
-      });
+    getShortLink(function(url) {
+	    sharePane.show();
+	    editPane.hide();
+      shortLink.val(url);
     });
   });
 }
