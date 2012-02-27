@@ -103,7 +103,16 @@ function getShortLink(callback) {
     });
     var resp = request.execute(function(resp) {
       if (!resp.error) {
-        callback(resp.id);
+        var url = resp.id
+        var message = '"' + messageInput.val() + '" - a poster at WeDontMakeDemands.org';
+
+        // Push new share params into the sharing elements.
+        shortLink.val(url);
+        addthis.update('share', 'url', url);
+        addthis.update('share', 'title', message);
+
+        // Callback, if any
+        callback && callback(url);
       }
     });
   });
@@ -112,10 +121,7 @@ function getShortLink(callback) {
 // Separated out so that we can call this on load() (after the
 // Google API bootstrapper has loaded) rather than ready()
 function onload() {
-	getShortLink(function(url) {
-		console.log(url);
-    shortLink.val(url);
-  });
+  getShortLink();
 }
 
 // Main setup tasks to be executed immediately after the DOM is
@@ -182,9 +188,8 @@ function onready() {
   // Set up share button.
   shareButton.click(function() {
     getShortLink(function(url) {
-	    sharePane.show();
-	    editPane.hide();
-      shortLink.val(url);
+      sharePane.show();
+      editPane.hide();
     });
   });
 }
