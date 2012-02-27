@@ -54,8 +54,8 @@
       <div class="info" style="margin-bottom: 10px;">
         (<span class="red">UPPERCASE words are red</span>, lowercase words are black.)
       </div>
-      <button class="larger-button">Larger</button> or 
-      <button class="smaller-button">Smaller</button> text.
+      <button class="larger-button" style="margin: 0 3px 0 0;">Larger</button> or
+      <button class="smaller-button" style="margin: 0 3px;">Smaller</button> text.
     </li>
   
     <li>

@@ -171,7 +171,7 @@ function onready() {
       parseInt(messageOutput.css('font-size').slice(0,-2)));
   messageOutput.data('originalLineHeight', 
       parseInt(messageOutput.css('line-height').slice(0,-2)));
-  $('#editor .larger-button').click(function() {
+  $('#edit .larger-button').click(function() {
     updateFontScale(1)
   });
   $('#edit .smaller-button').click(function() {

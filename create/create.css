@@ -24,7 +24,7 @@ a.selected {
 }
 
 #poster {
-	font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
+  font-family: 'ProximaNovaExtrabold', 'Helvetica', sans-serif;
   color: #000;
   background: #fff;
   text-transform: uppercase;
@@ -39,6 +39,7 @@ a.selected {
   -ms-box-shadow: 5px 5px 25px #999;
   -o-box-shadow: 5px 5px 25px #999;
   box-shadow: 5px 5px 25px #999;
+	overflow: hidden;
 }
 
 #poster:hover {
@@ -54,8 +55,10 @@ a.selected {
 
 .footer {
   position: absolute;
-  bottom: 3px;
-  left: 5px;
+	background: #fff;
+	padding: 3px;
+  bottom: 0px;
+  left: 2px;
 }
 
 .fixedtext {
@@ -80,12 +83,12 @@ a.selected {
 .message {
   position: absolute;
   width: 370px;
-  height: 320px;
   top: 149px;
   left: 6px;
   font-size: 70px;
   line-height: 54px;
-  overflow: hidden;
+	overflow-x: visible;
+  overflow-y: hidden;
 }
 
 .message span {
@@ -94,18 +97,25 @@ a.selected {
 
 .qrcode {
   position: absolute;
-  right: 3px;
-  bottom: 4px;
+	background: #fff;
+	padding: 2px 3px 4px 0;
+  right: 0px;
+  bottom: 0px;
   width: 104px;
   height: 104px;
 }
 
 .linklabel1, .linklabel2 {
   position: absolute;
+	background: #fff;
+	text-align: center;
+	padding: 0 3px 0 3px;
   right: 58px;
-  bottom: 51px;
-  width: 110px;
+  bottom: 47px;
+  width: 105px;
   font-size: 15px;
+	height: 15px;
+	line-height: 15px;
   -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
@@ -116,8 +126,7 @@ a.selected {
 
 .linklabel1 {
   color: #d8162e;
-  right: 72px;
-  bottom: 49px;
+  right: 73px;
   font-size: 16px;
 }
 
@@ -138,7 +147,7 @@ a.selected {
   color: #ddd;
   font-size: 36px;
   margin-bottom: 10px;
-	text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .rightpane ol {
@@ -163,7 +172,6 @@ a.selected {
 }
 
 .rightpane button {
-  xwidth: 80px;
   height: 30px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -177,6 +185,11 @@ a.selected {
   border: 1px solid #bbb;
   font-size: 16px;
   margin: 0px;
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .rightpane button:hover {
@@ -188,11 +201,15 @@ a.selected {
   background-image: -ms-linear-gradient(top,#eee,#ccc);
   background-image: -o-linear-gradient(top,#eee,#ccc);
   background-image: linear-gradient(top,#eee,#ccc);
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .rightpane button:active {
-  color: #fff;
-  text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+	color: #fff;
   border: 1px solid #999;
   background-color: #999;
   background-image: -webkit-linear-gradient(top,#ddd,#bbb);
@@ -200,6 +217,11 @@ a.selected {
   background-image: -ms-linear-gradient(top,#ddd,#bbb);
   background-image: -o-linear-gradient(top,#ddd,#bbb);
   background-image: linear-gradient(top,#ddd,#bbb);
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 .rightpane input,
 .rightpane textarea {
@@ -233,12 +255,12 @@ a.selected {
   height: 22px;
   padding: 5px;
   margin: 0px;
-	float: left;
+  float: left;
 }
 
 #share .addthis_toolbox {
-	height: 32px;
-	margin: 0 0 40px 180px;
+  height: 32px;
+  margin: 0 0 30px 180px;
 }
 
 #edit .info {
@@ -253,5 +275,5 @@ a.selected {
 }
 
 #edit .share-button {
-	margin-top: -3px;
+  margin-top: -3px;
 }
