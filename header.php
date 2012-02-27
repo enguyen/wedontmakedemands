@@ -54,7 +54,7 @@ Donate
 </form>
 </li>
         <li><a href="mailto:media@wedontmakedemands.org" title="media@wedontmakedemands.org">Contact Us</a></li>
-        <li><a href="create.php">Create</a></li>
+        <li><a href="create.php#m=Bring%20back%20the%20GLASS-STEAGALL%20act&l=Glass-Steagall&e=t">Create</a></li>
       </ul>
     </div><!-- end header -->
     <div id="current">

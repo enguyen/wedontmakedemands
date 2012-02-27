@@ -4,7 +4,7 @@
  */
 
 // Globals. Whatever, don't judge me.
-var editPane, messageInput, messageOutput,
+var editPane, inEditMode, messageInput, messageOutput,
     linkInput, linkPreview, qrcode, qrcodeLink,
     shareButton, shortLink, sharePane;
  
@@ -80,6 +80,7 @@ function makeThrottled(inputFunction, delay) {
 
 function updateUrl() {
   var params = {
+		e: inEditMode ? 't' : null,
     m: messageInput.val(),
     l: linkInput.val(),
     s: Math.round(100 * messageOutput.data('fontScale')) / 100
@@ -104,7 +105,8 @@ function getShortLink(callback) {
     var resp = request.execute(function(resp) {
       if (!resp.error) {
         var url = resp.id
-        var message = '"' + messageInput.val() + '" - a poster at WeDontMakeDemands.org';
+        var message = '"' + messageInput.val() +
+				    '" - a poster at WeDontMakeDemands.org';
 
         // Push new share params into the sharing elements.
         shortLink.val(url);
@@ -117,6 +119,19 @@ function getShortLink(callback) {
     });
   });
 }
+
+function switchMode(newMode) {
+	inEditMode = newMode == 'edit';
+	if (inEditMode) {
+		sharePane.hide();
+	  editPane.show();
+	} else {
+		sharePane.show();
+	  editPane.hide();
+	}
+	updateUrl();
+};
+
 
 // Separated out so that we can call this on load() (after the
 // Google API bootstrapper has loaded) rather than ready()
@@ -148,9 +163,8 @@ function onready() {
     params[hash[0]] = sanitize(decodeURI(hash[1]));
   }
 
-  // We start in view/share mode.
-  sharePane.show();
-  editPane.hide();
+  // Initialize to the correct mode, defaulting to view mode.
+	switchMode(params.e ? 'edit' : null);
 
   // Push initial settings into editor.
   messageInput.val(params.m);
@@ -181,15 +195,13 @@ function onready() {
 
   // Set up remix button.
   remixButton.click(function() {
-    sharePane.hide();
-    editPane.show();
+		switchMode('edit');
   });
   
   // Set up share button.
   shareButton.click(function() {
     getShortLink(function(url) {
-      sharePane.show();
-      editPane.hide();
+			switchMode();
     });
   });
 }
