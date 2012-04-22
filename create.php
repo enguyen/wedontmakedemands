@@ -9,8 +9,9 @@
 <link rel="stylesheet" type="text/css" href="create/create.css" />
 <script type="text/javascript">
   // Initialize.
-  $(document).ready(onready);
-  $(window).load(onload);
+  var posterMaker = new PosterMaker();
+  $(document).ready(function() { posterMaker.onready(); });
+  $(window).load(function() { posterMaker.onload(); });
 </script>
 
 <div id="poster">
@@ -32,10 +33,9 @@
   <h1>Share this poster</h1>
   <input class="short-link" type="text" />
   <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-    <a class="addthis_button_preferred_1" addthis:url="foo"></a>
+    <a class="addthis_button_preferred_1"></a>
     <a class="addthis_button_preferred_2"></a>
     <a class="addthis_button_preferred_3"></a>
-    <a class="addthis_button_preferred_4"></a>
     <a class="addthis_button_compact"></a>
   </div>
   <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f04a87632cb44b5"></script>

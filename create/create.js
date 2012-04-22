@@ -3,14 +3,24 @@
  * See http://wedontmakedemands.org/ for more details.
  */
 
-// Globals. Whatever, don't judge me.
-var editPane, inEditMode, messageInput, messageOutput,
-    linkInput, linkPreview, qrcode, qrcodeLink,
-    shareButton, shortLink, sharePane;
+// Set up namespace and properties.
+function PosterMaker() {
+  this.editPane;
+  this.inEditMode;
+  this.messageInput;
+  this.messageOutput;
+  this.linkInput;
+  this.linkPreview;
+  this.qrcode;
+  this.qrcodeLink;
+  this.shareButton;
+  this.shortLink;
+  this.sharePane;
+}
  
 // Protect against XSS attacks by whitelisting any user-provided
 // data before it is added anywhere to the DOM.
-function sanitize(string) {
+PosterMaker.prototype.sanitize = function(string) {
   if (!string) {
     return ''; // In case it's undefined or otherwise falsy.
   }
@@ -31,59 +41,60 @@ function sanitize(string) {
 } 
 
 // Sanitize, highlight, and output message.
-function updateMessage() {
-  var message = sanitize(messageInput.val());
+PosterMaker.prototype.updateMessage = function() {
+  var message = this.sanitize(this.messageInput.val());
   message = message.replace('\n', ' <br/> ');
   var tokens = message.split(/\s/);
   tokens = $.map(tokens, function(token) {
     return token == token.toUpperCase() ?
         '<span>' + token + '</span>' : token;
   });
-  messageOutput[0].innerHTML = tokens.join(' ');
-  updateUrl();
+  this.messageOutput[0].innerHTML = tokens.join(' ');
+  this.updateUrl();
 }
 
-function updateFontScale(percentChange) {
-  function scaleStyle(originalProperty) {
-    var oldScale = messageOutput.data('fontScale');
+PosterMaker.prototype.updateFontScale = function(percentChange) {
+	var self = this;
+  var scaleStyle = $.proxy(function(originalProperty) {
+    var oldScale = this.messageOutput.data('fontScale');
     var newScale = oldScale + (percentChange / 100);
-    messageOutput.data('fontScale', newScale);
-    var originalValue = messageOutput.data(originalProperty);
+    this.messageOutput.data('fontScale', newScale);
+    var originalValue = this.messageOutput.data(originalProperty);
     return (originalValue * newScale) + 'px';
-  }
-  messageOutput.css('font-size', scaleStyle('originalFontSize'));
-  messageOutput.css('line-height', scaleStyle('originalLineHeight'));
-  updateUrl();
+  }, this);
+  this.messageOutput.css('font-size', scaleStyle('originalFontSize'));
+  this.messageOutput.css('line-height', scaleStyle('originalLineHeight'));
+  this.updateUrl();
 }
 
 // Sanitize and output Wikipedia link. Throttle this to 
 // keep it from hitting the Charts API too often.
-function updateLink() {        
-  var linkValue = sanitize(linkInput.val());
-  qrcode[0].src = 'https://chart.googleapis.com/chart?' +
+PosterMaker.prototype.updateLink = function() {        
+  var linkValue = this.sanitize(this.linkInput.val());
+  this.qrcode[0].src = 'https://chart.googleapis.com/chart?' +
       'cht=qr&chs=120x120&choe=UTF-8&chld=M|0&chl=' +
       'http://en.qrwp.org/' + linkValue;
-  qrcodeLink[0].href = 'http://en.qrwp.org/' + linkValue;
-  qrcodeLink[0].title = 'Wikipedia article: "' + linkValue + '"'
-  linkPreview[0].src = qrcodeLink[0].href;
-  updateUrl();
+  this.qrcodeLink[0].href = 'http://en.qrwp.org/' + linkValue;
+  this.qrcodeLink[0].title = 'Wikipedia article: "' + linkValue + '"'
+  this.linkPreview[0].src = this.qrcodeLink[0].href;
+  this.updateUrl();
 }
 
-function makeThrottled(inputFunction, delay) {
+PosterMaker.prototype.makeThrottled = function(inputFunction, delay) {
   var timedExecution;
-  function throttled() {
+  var throttled = $.proxy(function() {
     clearTimeout(timedExecution);
-    timedExecution = setTimeout(inputFunction, delay);
-  }
+    timedExecution = setTimeout($.proxy(inputFunction, this), delay);
+  }, this);
   return throttled;
 }
 
-function updateUrl() {
+PosterMaker.prototype.updateUrl = function() {
   var params = {
-		e: inEditMode ? 't' : null,
-    m: messageInput.val(),
-    l: linkInput.val(),
-    s: Math.round(100 * messageOutput.data('fontScale')) / 100
+    e: this.inEditMode ? 't' : null,
+    m: this.messageInput.val(),
+    l: this.linkInput.val(),
+    s: Math.round(100 * this.messageOutput.data('fontScale')) / 100
   };
   var hashString = '';
   for (var paramName in params) {
@@ -94,114 +105,114 @@ function updateUrl() {
 }
 
 // Takes a callback function, with the shortened URL as its param.
-function getShortLink(callback) { 
-  gapi.client.load('urlshortener', 'v1', function() {
+PosterMaker.prototype.getShortLink = function(callback) {
+  gapi.client.load('urlshortener', 'v1', $.proxy(function() {
     var request = gapi.client.urlshortener.url.insert({
       resource: { 
         key: 'AIzaSyDQ8kbLY0NXOFDlqE80D_8W4zN1JTnF2Z0',
         longUrl: window.location.href
       }
     });
-    var resp = request.execute(function(resp) {
+    var resp = request.execute($.proxy(function(resp) {
       if (!resp.error) {
         var url = resp.id
-        var message = '"' + messageInput.val() +
-				    '" - a poster at WeDontMakeDemands.org';
+        var message = '"' + this.messageInput.val() +
+            '" - a poster at WeDontMakeDemands.org';
 
         // Push new share params into the sharing elements.
-        shortLink.val(url);
+        this.shortLink.val(url);
         addthis.update('share', 'url', url);
         addthis.update('share', 'title', message);
 
         // Callback, if any
         callback && callback(url);
       }
-    });
-  });
+    }, this));
+  }, this));
 }
 
-function switchMode(newMode) {
-	inEditMode = newMode == 'edit';
-	if (inEditMode) {
-		sharePane.hide();
-	  editPane.show();
-	} else {
-		sharePane.show();
-	  editPane.hide();
-	}
-	updateUrl();
+PosterMaker.prototype.switchMode = function(newMode) {
+  this.inEditMode = newMode == 'edit';
+  if (this.inEditMode) {
+    this.sharePane.hide();
+    this.editPane.show();
+  } else {
+    this.sharePane.show();
+    this.editPane.hide();
+  }
+  this.updateUrl();
 };
 
 
 // Separated out so that we can call this on load() (after the
 // Google API bootstrapper has loaded) rather than ready()
-function onload() {
-  getShortLink();
+PosterMaker.prototype.onload = function() {
+  this.getShortLink();
 }
 
 // Main setup tasks to be executed immediately after the DOM is
 // ready.
-function onready() {
+PosterMaker.prototype.onready = function() {
   // Set globals.
-  editPane = $('#edit');
-  messageInput = $('#edit .message-input');
-  messageOutput = $('#poster .message');
-  linkInput = $('#edit .link-input');
-  linkPreview = $('#edit .link-preview');
-  qrcode = $('#poster .qrcode');
-  qrcodeLink = $('#poster .qrcode-link');
-  shareButton = $('#edit .share-button');
-  sharePane = $('#share');
-  shortLink = $('#share .short-link');
+  this.editPane = $('#edit');
+  this.messageInput = $('#edit .message-input');
+  this.messageOutput = $('#poster .message');
+  this.linkInput = $('#edit .link-input');
+  this.linkPreview = $('#edit .link-preview');
+  this.qrcode = $('#poster .qrcode');
+  this.qrcodeLink = $('#poster .qrcode-link');
+  this.shareButton = $('#edit .share-button');
+  this.sharePane = $('#share');
+  this.shortLink = $('#share .short-link');
   remixButton = $('#share .remix-button');
-  
+
   // Extract initial settings from URL. Sanitize.
   var paramStrings = window.location.hash.slice(1).split('&');
   var params = {};
   for (var i = 0; i < paramStrings.length; i += 1) {
     var hash = paramStrings[i].split('=');
-    params[hash[0]] = sanitize(decodeURI(hash[1]));
+    params[hash[0]] = this.sanitize(decodeURI(hash[1]));
   }
 
   // Initialize to the correct mode, defaulting to view mode.
-	switchMode(params.e ? 'edit' : null);
+  this.switchMode(params.e ? 'edit' : null);
 
   // Push initial settings into editor.
-  messageInput.val(params.m);
-  linkInput.val(params.l);
+  this.messageInput.val(params.m);
+  this.linkInput.val(params.l);
   
   // Set up events and initialize poster.
   // Message.
-  messageInput.keyup(makeThrottled(updateMessage, 250));
-  updateMessage();
+  this.messageInput.keyup(this.makeThrottled(this.updateMessage, 250));
+  this.updateMessage();
   
   // Link.
-  linkInput.keyup(makeThrottled(updateLink, 2000));
-  params.l && updateLink();
+  this.linkInput.keyup(this.makeThrottled(this.updateLink, 2000));
+  params.l && this.updateLink();
   
   // Font size and line height.
-  messageOutput.data('fontScale', parseFloat(params.s) || 1);
-  messageOutput.data('originalFontSize', 
-      parseInt(messageOutput.css('font-size').slice(0,-2)));
-  messageOutput.data('originalLineHeight', 
-      parseInt(messageOutput.css('line-height').slice(0,-2)));
-  $('#edit .larger-button').click(function() {
-    updateFontScale(1)
-  });
-  $('#edit .smaller-button').click(function() {
-    updateFontScale(-1)
-  });
-  params.s && updateFontScale(params.s - 1);
+  this.messageOutput.data('fontScale', parseFloat(params.s) || 1);
+  this.messageOutput.data('originalFontSize', 
+      parseInt(this.messageOutput.css('font-size').slice(0,-2)));
+  this.messageOutput.data('originalLineHeight', 
+      parseInt(this.messageOutput.css('line-height').slice(0,-2)));
+  $('#edit .larger-button').click($.proxy(function() {
+    this.updateFontScale(1)
+  }, this));
+  $('#edit .smaller-button').click($.proxy(function() {
+    this.updateFontScale(-1)
+  }, this));
+  params.s && this.updateFontScale(params.s - 1);
 
   // Set up remix button.
-  remixButton.click(function() {
-		switchMode('edit');
-  });
+  remixButton.click($.proxy(function() {
+    this.switchMode('edit');
+  }, this));
   
   // Set up share button.
-  shareButton.click(function() {
-    getShortLink(function(url) {
-			switchMode();
-    });
-  });
+  this.shareButton.click($.proxy(function() {
+    this.getShortLink($.proxy(function(url) {
+      this.switchMode();
+    }, this));
+  }, this));
 }
