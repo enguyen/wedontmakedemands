@@ -8,6 +8,9 @@
     ?></title>
     <meta name="description" content="We Don't Make Demands: Suggestions for real reforms to US and international banking, political, and environmental practices."> 
     <meta name="description" content="occupy,occupy wall street,demands,suggestions,posters"> 
+    <meta property="og:site_name" content="We Don't Make Demands"/>
+	  <meta property="og:image" content="http://wedontmakedemands.org/images/poster-kiss.jpg"/>
+    <meta property="og:description" content="We Don't Make Demands: Suggestions for real reforms to US and international banking, political, and environmental practices."/>
     <link rel="stylesheet" type="text/css" href="main.css">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<script type="text/javascript">
