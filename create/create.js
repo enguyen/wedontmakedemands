@@ -118,7 +118,7 @@ PosterMaker.prototype.getShortLink = function(callback) {
       if (!resp.error) {
         var url = resp.id
         var message = '"' + this.messageInput.val() +
-            '" - a poster at WeDontMakeDemands.org';
+            '" - a solution at WeDontMakeDemands.org';
 
         // Push new share params into the sharing elements.
         this.shortLink.val(url);
