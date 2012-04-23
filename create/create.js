@@ -16,6 +16,7 @@ function PosterMaker() {
   this.shareButton;
   this.shortLink;
   this.sharePane;
+  this.shareControlsMask;
 }
  
 // Protect against XSS attacks by whitelisting any user-provided
@@ -147,7 +148,9 @@ PosterMaker.prototype.switchMode = function(newMode) {
 // Separated out so that we can call this on load() (after the
 // Google API bootstrapper has loaded) rather than ready()
 PosterMaker.prototype.onload = function() {
-  this.getShortLink();
+  this.getShortLink($.proxy(function(url) {
+    this.shareControlsMask.hide();
+  }, this));
 }
 
 // Main setup tasks to be executed immediately after the DOM is
@@ -163,6 +166,7 @@ PosterMaker.prototype.onready = function() {
   this.qrcodeLink = $('#poster .qrcode-link');
   this.shareButton = $('#edit .share-button');
   this.sharePane = $('#share');
+  this.shareControlsMask = $('#share-controls-mask');
   this.shortLink = $('#share .short-link');
   remixButton = $('#share .remix-button');
 
@@ -211,8 +215,10 @@ PosterMaker.prototype.onready = function() {
   
   // Set up share button.
   this.shareButton.click($.proxy(function() {
+    this.shareControlsMask.show();
+    this.switchMode();
     this.getShortLink($.proxy(function(url) {
-      this.switchMode();
+      this.shareControlsMask.hide();
     }, this));
   }, this));
 }

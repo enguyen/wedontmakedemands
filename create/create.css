@@ -39,7 +39,7 @@ a.selected {
   -ms-box-shadow: 5px 5px 25px #999;
   -o-box-shadow: 5px 5px 25px #999;
   box-shadow: 5px 5px 25px #999;
-	overflow: hidden;
+  overflow: hidden;
 }
 
 #poster:hover {
@@ -55,8 +55,8 @@ a.selected {
 
 .footer {
   position: absolute;
-	background: #fff;
-	padding: 3px;
+  background: #fff;
+  padding: 3px;
   bottom: 0px;
   left: 2px;
 }
@@ -87,7 +87,7 @@ a.selected {
   left: 6px;
   font-size: 70px;
   line-height: 54px;
-	overflow-x: visible;
+  overflow-x: visible;
   overflow-y: hidden;
 }
 
@@ -97,8 +97,8 @@ a.selected {
 
 .qrcode {
   position: absolute;
-	background: #fff;
-	padding: 2px 3px 4px 0;
+  background: #fff;
+  padding: 2px 3px 4px 0;
   right: 0px;
   bottom: 0px;
   width: 104px;
@@ -107,15 +107,15 @@ a.selected {
 
 .linklabel1, .linklabel2 {
   position: absolute;
-	background: #fff;
-	text-align: center;
-	padding: 0 3px 0 3px;
+  background: #fff;
+  text-align: center;
+  padding: 0 3px 0 3px;
   right: 58px;
   bottom: 47px;
   width: 105px;
   font-size: 15px;
-	height: 15px;
-	line-height: 15px;
+  height: 15px;
+  line-height: 15px;
   -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
@@ -209,7 +209,7 @@ a.selected {
 }
 
 .rightpane button:active {
-	color: #fff;
+  color: #fff;
   border: 1px solid #999;
   background-color: #999;
   background-image: -webkit-linear-gradient(top,#ddd,#bbb);
@@ -261,6 +261,21 @@ a.selected {
 #share .addthis_toolbox {
   height: 32px;
   margin: 0 0 30px 180px;
+}
+
+#share-controls {
+  position: relative;
+}
+
+#share-controls-mask {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: #fff;
+  filter: alpha(opacity=50);
+  opacity: .5;
 }
 
 #edit .info {

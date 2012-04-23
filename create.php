@@ -32,14 +32,18 @@
 <div id="share" class="rightpane">
   <h1>Share this poster</h1>
   <input class="short-link" type="text" />
-  <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-    <a class="addthis_button_preferred_1"></a>
-    <a class="addthis_button_preferred_2"></a>
-    <a class="addthis_button_preferred_3"></a>
-    <a class="addthis_button_compact"></a>
+  <div id="share-controls">
+    <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+      <a class="addthis_button_preferred_1"></a>
+      <a class="addthis_button_preferred_2"></a>
+      <a class="addthis_button_preferred_3"></a>
+      <a class="addthis_button_preferred_4"></a>
+      <a class="addthis_button_compact"></a>
+    </div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f04a87632cb44b5"></script>
+    <div id="share-controls-mask"></div>
   </div>
-  <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f04a87632cb44b5"></script>
-
+  
   <h1>Remix</h1>
   <button class="remix-button">Remix this poster</button>  
 </div>
